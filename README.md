@@ -16,13 +16,13 @@ This is just a simple collection of small codes I created while developing my pr
 
 ## TextComponentBuilder
 
-[TextComponentBuilder](https://github.com/NolwenDEV/Utilities/TextComponentBuilder/) is a pretty simple builder to help you creating cliquable messages using the TextComponent API of BungeeCord.  
-Refer to the [README](https://github.com/NolwenDEV/Utilities/TextComponentBuilder/blob/Main/README.md) to learn how to use it !
+[TextComponentBuilder](https://github.com/NolwenDEV/Utilities/tree/Main/TextComponentBuilder) is a pretty simple builder to help you creating clickable messages using the TextComponent API of BungeeCord.  
+Refer to the [README](https://github.com/NolwenDEV/Utilities/blob/Main/TextComponentBuilder/README.md) to learn how to use it !
 
 ## ConfigAnnotation
 
-[ConfigAnnotation](https://github.com/NolwenDEV/Utilities/ConfigAnnotation/) is a tool to help you managing config files in your Spigot plugins.  
-Refer to the [README](https://github.com/NolwenDEV/Utilities/ConfigAnnotation/blob/Main/README.md) to learn how to use it !
+[ConfigAnnotation](https://github.com/NolwenDEV/Utilities/tree/Main/ConfigAnnotation) is a tool to help you managing config files in your Spigot plugins.  
+Refer to the [README](https://github.com/NolwenDEV/Utilities/blob/Main/ConfigAnnotation/README.md) to learn how to use it !
 
 ## Licensing
 
