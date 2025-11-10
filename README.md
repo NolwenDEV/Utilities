@@ -24,6 +24,11 @@ Refer to the [README](https://github.com/NolwenDEV/Utilities/blob/Main/TextCompo
 [ConfigAnnotation](https://github.com/NolwenDEV/Utilities/tree/Main/ConfigAnnotation) is a tool to help you managing config files in your Spigot plugins.  
 Refer to the [README](https://github.com/NolwenDEV/Utilities/blob/Main/ConfigAnnotation/README.md) to learn how to use it !
 
+## Registrar
+
+[Registrar](https://github.com/NolwenDEV/Utilities/tree/Main/Registrar) is a tool to help you registering commands and listeners with just two lines instead of many.  
+Refer to the [README](https://github.com/NolwenDEV/Utilities/blob/Main/Registrar/README.md) to learn how to use it !
+
 ## Licensing
 
 My utilities is under the "[GNU General Public License v3.0](https://github.com/NolwenDEV/Utilities/blob/Main/LICENSE)".

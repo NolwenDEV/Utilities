@@ -16,7 +16,7 @@ Manage multiple configuration files easily !
 
 ## Usage Example
 
-Here's a few examples to help you understand how this builder works !  
+Here's an example to help you understand how this annotation works !  
 My annotation automatically convert `&` into `§` to put color in your message and automatically define default values based on the file in your project :D
 (You're a very lazy developer.. don't you ? Then, thanks me later :3)
 
