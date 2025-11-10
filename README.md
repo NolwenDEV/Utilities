@@ -13,6 +13,7 @@ This is just a simple collection of small codes I created while developing my pr
 
 - [TextComponentBuilder](#textcomponentbuilder)
 - [ConfigAnnotation](#configannotation)
+- [Registrar](#registrar)
 
 ## TextComponentBuilder
 
