@@ -5,8 +5,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -22,17 +24,37 @@ public class ConfigurationLoader {
 			Configuration annotation = field.getAnnotation(Configuration.class);
 			
 			FileConfiguration configuration = getConfigurationFile(annotation.FILE());
-			Object value = configuration.get(annotation.KEY());
+			Object value = null;
 			
-			if(value == null) {
-				try { value = field.get(instance); } catch(IllegalAccessException exception) {}
-				configuration.set(annotation.KEY(), value);
-			}
-			if(value instanceof String string && string.contains("&")) { value = string.replace("&", "§"); }
-			
-			try { field.set(instance, value); } catch(IllegalAccessException exception) {
-				Main.getInstance().getLogger().severe(String.format("Field '%s' couldn't be defined : %s", field.getName(), exception.getMessage()));
-			}
+			field.setAccessible(true);
+			try {
+				if(Map.class.isAssignableFrom(field.getType())) {
+					ConfigurationSection section = configuration.getConfigurationSection(annotation.KEY());
+					Map<String, String> map = new HashMap<>();
+					
+					if(section != null) {
+						for(String key : section.getKeys(false)) {
+							String text = section.getString(key);
+							if(text != null && text.contains("&")) text = text.replace("&", "§");
+							map.put(key, text);
+						}
+					}
+					
+					value = map;
+				} else if(List.class.isAssignableFrom(field.getType())) {
+					List<String> list = configuration.getStringList(annotation.KEY());
+				    list.replaceAll(string -> string != null ? string.replace("&", "§") : null);
+				    
+				    value = list;
+				} else {
+					value = configuration.get(annotation.KEY(), field.get(instance));
+					if (value instanceof String string && string.contains("&")) { value = string.replace("&", "§"); }
+				}
+
+	            field.set(instance, value);
+	        } catch (IllegalAccessException exception) {
+	            Main.getInstance().getLogger().severe(String.format("⚠️ | Field '%s' cannot be defined : %s", field.getName(), exception.getMessage()));
+	        }
 		}
 		
 		save();
@@ -49,14 +71,14 @@ public class ConfigurationLoader {
 					Main.getInstance().getDataFolder().mkdirs();
 					try(OutputStream output = new FileOutputStream(file)) {
 						input.transferTo(output);
-						Main.getInstance().getLogger().info(String.format("Default configuration sucessfully copied into '%s' !", file.getName()));
+						Main.getInstance().getLogger().info(String.format("✅ | Default configuration sucessfully copied into '%s' !", file.getName()));
 					}
 				} else {
 					file.createNewFile();
-					Main.getInstance().getLogger().info(String.format("Empty configuration sucessfully created for '%s' !", file.getName()));
+					Main.getInstance().getLogger().info(String.format("✅ | Empty configuration sucessfully created for '%s' !", file.getName()));
 				}
 			} catch(IOException exception) {
-				Main.getInstance().getLogger().severe(String.format("File '%s' couldn't be created : %s", file.getName(), exception.getMessage()));
+				Main.getInstance().getLogger().severe(String.format("⚠️ | File '%s' couldn't be created : %s", file.getName(), exception.getMessage()));
 			}
 		}
 		
@@ -70,9 +92,9 @@ public class ConfigurationLoader {
 			
 			try {
 				entry.getValue().save(file);
-				Main.getInstance().getLogger().info(String.format("File '%s' has been successfully saved !", file.getName()));
+				Main.getInstance().getLogger().info(String.format("✅ | File '%s' has been successfully saved !", file.getName()));
 			} catch(IOException exception) {
-				Main.getInstance().getLogger().severe(String.format("File '%s' couldn't be saved : %s", file, exception.getMessage()));
+				Main.getInstance().getLogger().severe(String.format("⚠️ | File '%s' couldn't be saved : %s", file, exception.getMessage()));
 			}
 		}
 	}
