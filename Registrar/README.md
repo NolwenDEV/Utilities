@@ -69,4 +69,4 @@ commands:
 
 ## Licensing
 
-ConfigAnnotation is under the "[GNU General Public License v3.0](https://github.com/NolwenDEV/Utilities/blob/Main/LICENSE)".
+Registrar is under the "[GNU General Public License v3.0](https://github.com/NolwenDEV/Utilities/blob/Main/LICENSE)".
