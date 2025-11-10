@@ -33,7 +33,7 @@ public class MyBeautifulCommand implements CommandExecutor {
 
 `Main` Class Example :
 
-```
+```Java
 public class Main extends JavaPlugin {
 
     private Registrar registrar;
