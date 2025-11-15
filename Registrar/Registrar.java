@@ -1,7 +1,4 @@
-import java.io.File;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import org.bukkit.command.CommandExecutor;
@@ -12,11 +9,12 @@ public class Registrar {
 	
 	public void registerCommands(String packageName) {
 		try {
+			int counter = 0;
 			for(Class<?> instance : getClasses(packageName)) {
 				if(!CommandExecutor.class.isAssignableFrom(instance)) continue;
-				if(instance.getAnnotation(Command.class) == null) continue;
+				if(instance.getAnnotation(CommandRegistrar.class) == null) continue;
 				
-				Command command = instance.getAnnotation(Command.class);
+				CommandRegistrar command = instance.getAnnotation(CommandRegistrar.class);
 				CommandExecutor commandExecutor = (CommandExecutor) instance.getDeclaredConstructor().newInstance();
 				PluginCommand pluginCommand = Main.getInstance().getCommand(command.NAME());
 				
@@ -26,8 +24,10 @@ public class Registrar {
 				}
 				
 				pluginCommand.setExecutor(commandExecutor);
-				Main.getInstance().getLogger().info(String.format("✅ | Command '/%s' (%s) successfully registered !", command.NAME(), instance.getSimpleName()));
+				counter++;
 			}
+			
+			Main.getInstance().getLogger().info(String.format("✅ | A total of %s commands has been successfully registered !", counter));
 		} catch(Exception exception) {
 			Main.getInstance().getLogger().severe(String.format("⚠️ | An error has occured while registering commands : %s", exception.getMessage()));
 		}
@@ -35,12 +35,14 @@ public class Registrar {
 	
 	public void registerListeners(String packageName) {
 		try {
+			int counter = 0;
 			for(Class<?> instance : getClasses(packageName)) {
 				if(!Listener.class.isAssignableFrom(instance)) continue;
 				
 				Main.getInstance().getServer().getPluginManager().registerEvents((Listener) instance.getDeclaredConstructor().newInstance(), Main.getInstance());
-				Main.getInstance().getLogger().info(String.format("✅ | Listener '%s' successfully registered !", instance.getSimpleName()));
 			}
+			
+			Main.getInstance().getLogger().info(String.format("✅ | A total of %s listeners has been successfully registered !", counter));
 		} catch(Exception exception) {
 			Main.getInstance().getLogger().severe(String.format("⚠️ | An error has occured while registering listeners : %s", exception.getMessage()));
 		}
@@ -49,21 +51,25 @@ public class Registrar {
 		// ---------------------------------------- \\
 	
 	private Set<Class<?>> getClasses(String packageName) throws Exception {
-		if(getClass().getClassLoader().getResource(packageName.replace(".", "/")) == null) return Collections.emptySet();
-		if(!(new File(getClass().getClassLoader().getResource(packageName.replace(".", "/")).toURI())).exists()) return Collections.emptySet();
-		
-		Set<Class<?>> classes = new HashSet<>();
-		File directory = new File(getClass().getClassLoader().getResource(packageName.replace(".", "/")).toURI());
-		
-		for(File file : Objects.requireNonNull(directory.listFiles())) {
-			if(file.isDirectory()) {
-				classes.addAll(getClasses(String.format("%s.%s", packageName, file.getName())));
-			} else if(file.getName().endsWith(".class")) {
-				classes.add(Class.forName(String.format("%s.%s", packageName, file.getName().replace(".class", ""))));
-			}
-		}
-		
-		return classes;
+	    Set<Class<?>> classes = new HashSet<>();
+
+	    String path = packageName.replace('.', '/');
+	    try (java.util.jar.JarFile jarFile = new java.util.jar.JarFile(Main.getInstance().getPluginFile())) {
+	        var entries = jarFile.entries();
+
+	        while (entries.hasMoreElements()) {
+	            var entry = entries.nextElement();
+	            String name = entry.getName();
+
+	            if (name.startsWith(path) && name.endsWith(".class") && !entry.isDirectory()) {
+	                String className = name.replace('/', '.').replace(".class", "");
+	                classes.add(Class.forName(className));
+	            }
+	        }
+	    }
+
+	    return classes;
 	}
+
 
 }
