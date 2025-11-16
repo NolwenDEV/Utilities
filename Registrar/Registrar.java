@@ -38,7 +38,8 @@ public class Registrar {
 			int counter = 0;
 			for(Class<?> instance : getClasses(packageName)) {
 				if(!Listener.class.isAssignableFrom(instance)) continue;
-				
+
+				counter++;
 				Main.getInstance().getServer().getPluginManager().registerEvents((Listener) instance.getDeclaredConstructor().newInstance(), Main.getInstance());
 			}
 			
