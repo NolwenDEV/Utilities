@@ -56,8 +56,6 @@ public class ConfigurationLoader {
 	            Main.getInstance().getLogger().severe(String.format("⚠️ | Field '%s' cannot be defined : %s", field.getName(), exception.getMessage()));
 	        }
 		}
-		
-		save();
 	}
 	
 	private FileConfiguration getConfigurationFile(String fileName) {
